@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
-from .models import Question, Choice, Note
+from django.views.decorators.csrf import csrf_exempt
+from .models import Question, Choice
 from django.urls import reverse
 from django.utils import timezone
 import sqlite3
@@ -15,22 +16,16 @@ def polls(request):
     context = { 'questions': questions }
     return render(request, 'polls/polls.html', context)
 
-@login_required
+# fix 5:
+# @login_required
+@csrf_exempt
 def detail(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
     return render(request, 'polls/detail.html', {'question': question})
 
-@login_required
-def results(request, question_id):
-    question = get_object_or_404(Question, pk=question_id)
-    try:
-        notes = question.note_set.all()
-    except:
-        notes = []
-    return render(request, 'polls/results.html', {'question': question, 'notes': notes})
-
 # fix 5:
 # @login_required
+@csrf_exempt
 def vote(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
     try:
@@ -65,7 +60,22 @@ def add_poll(request):
     if request.method == 'GET':
         return render(request, 'polls/add_poll.html')
 
-@login_required
+# flaw 1:
+@csrf_exempt
+# fix 5:
+# @login_required
+def results(request, question_id):
+    question = get_object_or_404(Question, pk=question_id)
+    try:
+        notes = question.note_set.all()
+    except:
+        notes = []
+    return render(request, 'polls/results.html', {'question': question, 'notes': notes})
+
+# flaw 1:
+@csrf_exempt
+# fix 5:
+# @login_required
 def add_note(request, question_id):
     if request.method == 'POST':
         question = get_object_or_404(Question, pk=question_id)
@@ -76,11 +86,11 @@ def add_note(request, question_id):
             conn = sqlite3.connect(dbname)
             cursor = conn.cursor()
             # flaw 3:
-            cursor.executescript("INSERT INTO polls_note (user, question_id, note_text) VALUES ('" + username + "', " + question_id + ", '" + note_text + "')")
+            cursor.executescript("INSERT INTO polls_note (user, question_id, note_text) VALUES ('" + username + "', " + str(question_id) + ", '" + note_text + "')")
 
-            # fix:
+            # fix 3:
             # sql = "INSERT INTO polls_note (user, question_id, note_text) VALUES (?, ?, ?)"
-            # values = (username, question_id, note_text)
+            # values = (username, str(question_id), note_text)
             # cursor.execute(sql, values)
 
             conn.commit()

@@ -14,10 +14,7 @@
     <form action="{% url 'add_note' question.id %}" method="post">
         <textarea name="note_text" rows="4" cols="50"></textarea><br>
         <input type="submit" value="Add Note">
-        <!-- 
-            fix to flaw 1:
-            {% csrf_token %}
-        -->
+        {% csrf_token %}
     </form>
 
     {% if notes %}

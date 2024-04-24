@@ -102,6 +102,10 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+# fix flaw 2  by removing this:
+PASSWORD_HASHERS = [
+    'django.contrib.auth.hashers.UnsaltedMD5PasswordHasher',
+]
 
 
 # Internationalization
