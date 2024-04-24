@@ -1,0 +1,17 @@
+<h1> Polls app</h1>
+{% if user.is_authenticated %}
+<div>
+<a href="/polls">All polls</a>
+   
+<a href="/add_poll">Add new poll</a>
+</div>
+
+<form id="logout-form" action="{% url 'logout' %}" method="post">
+   {% csrf_token %}
+   <br></br>
+   <button type="submit">Logout</button>
+</form>
+
+{% else %}
+<a href="/login">Login here</a>
+{% endif %}

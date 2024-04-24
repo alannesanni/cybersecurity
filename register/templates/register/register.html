@@ -1,0 +1,23 @@
+<form method="POST" class="form-group">
+    {% csrf_token %}
+    <label for="username">Username:</label>
+    <input type="text" id="username" name="username">
+    
+    <label for="password1">Password:</label>
+    <input type="password" id="password1" name="password1">
+    
+    <label for="password2">Confirm Password:</label>
+    <input type="password" id="password2" name="password2">
+    
+    <button type="submit" class="btn btn-success">Register</button>
+</form>
+
+<!-- fix 2 and 4:
+{% load crispy_forms_tags %}
+
+<form method="POST" class="form-group">
+    {% csrf_token %}
+    {{ form|crispy }}
+    <button type="submit" class="btn btn-success">Register</button>
+</form>
+-->

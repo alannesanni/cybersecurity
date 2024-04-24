@@ -1,0 +1,15 @@
+<h2>All Polls</h2>
+
+<!--flaw 5: -->
+<a href="/">Back home</a>
+<!--fix: {% if user.is_authenticated %}-->
+{% if questions %}
+ <ul>
+    {% for question in questions %}
+    <li><a href="{% url 'detail' question.id %}">{{ question.question_text }}</a></li>
+    {% endfor %}
+ </ul>
+{% else %}
+<p> No polls are available.</p>
+{% endif %}
+<!--fix: {% endif %}-->
